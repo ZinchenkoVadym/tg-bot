@@ -29,4 +29,6 @@ RapidFuzz==3.13.0
 schedule==1.2.2
 thefuzz==0.22.1
 beautifulsoup4==4.13.4
-
+sgmllib3k==1.0.0
+soupsieve==2.7
+feedparser==6.0.11
