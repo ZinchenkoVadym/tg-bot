@@ -11,6 +11,7 @@ import re
 import os
 import random
 from thefuzz import fuzz
+import pytz
 from datetime import datetime
 
 # --- КОНФІГУРАЦІЯ ---
@@ -35,6 +36,7 @@ STATE_FILE = 'bot_state.txt'
 GLOBAL_POSTED_TITLES_FILE = 'global_posted_titles.txt'
 MAX_TITLES_TO_KEEP = 100
 SIMILARITY_THRESHOLD = 85
+KYIV_TZ = pytz.timezone('Europe/Kiev')
 
 
 # --- Функції для роботи з глобальною пам'яттю ---
@@ -184,16 +186,12 @@ async def main_task():
 
 
 def job():
-    """
-    НОВА ЛОГІКА: Перевіряє час перед запуском основного завдання.
-    """
-    current_hour = datetime.now().hour
-    # Постимо тільки з 8 ранку до 1 ночі (тобто години 8, 9, ..., 23, 0)
+    current_hour = datetime.now(KYIV_TZ).hour
     if not (current_hour >= 8 or current_hour < 1):
-        print(f"Зараз {current_hour}:00. Постинг призупинено до 8 ранку.")
-        return  # Не виконуємо завдання, якщо час не відповідний
+        print(f"Зараз {current_hour}:00 (Київ). Постинг призупинено до 8 ранку.")
+        return
 
-    print(f"\n--- {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} ---")
+    print(f"\n--- {datetime.now(KYIV_TZ).strftime('%Y-%m-%d %H:%M:%S')} ---")
     asyncio.run(main_task())
 
 
